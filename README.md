@@ -1,4 +1,4 @@
-# client
+# Tic Tac Toe - Fiebase
 
 ## Project setup
 ```

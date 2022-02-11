@@ -4,7 +4,7 @@
     <header class="pt-2">
       <h3 class="m-0">{{ appTitle }} <span class="badge bg-secondary">{{ appVersion }}</span></h3>
       <div class="">
-        <div class="">Hi <b>{{ user.email}}</b> <button @click="logout()">Logout</button></div>
+        <div class="">Hi <b>{{ user.name}}</b> <button @click="logout()">Logout</button></div>
       </div>
     </header>
 

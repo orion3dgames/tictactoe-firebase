@@ -24,6 +24,8 @@
     <div class="row" >
       <div class="col-sm-8">
 
+        {{user}}
+        <hr>
         {{session}}
 
         <div v-if="session.started === 1">
@@ -59,7 +61,7 @@
           </thead>
           <tbody>
             <tr>
-              <td v-for="player in session.players" :key="player.socket_id" class="text-center"><span class="display-2">{{ player.win }}</span></td>
+              <td v-for="player in session.players" :key="player.socket_id" class="text-center"><span class="display-2">{{ player.score }}</span></td>
             </tr>
           </tbody>
         </table>
@@ -109,8 +111,8 @@ export default {
       return this.$store.getters.user;
     }
   },
-  updated: function () {
-    console.log('[updated] Play Page Mounted', this.session, this.user);
+  mounted: function () {
+    console.log('[mounted] Play Page Mounted', this.user);
 
     // IF CREATOR DELETE GAME SESSION, THEN REDIRECT TO HOMEPAGE
     if(!this.session){
@@ -129,6 +131,11 @@ export default {
 
     },
     sendMessage(){
+      this.$store.dispatch('addMessage', {
+        'session_id': this.session.uid,
+        'message': this.chat_message,
+        'name': this.user.name,
+      });
       this.chat_message = '';
     },
     copyLink(){

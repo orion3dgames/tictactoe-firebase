@@ -15,8 +15,8 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="session in sessions" :key="session.uid">
+        <tbody v-for="session in sessions" :key="session.uid">
+          <tr v-if="user.uid !== session.creator.uid">
             <td>{{session.uid}}</td>
             <td>{{session.creator.email}}</td>
             <td class="text-end">

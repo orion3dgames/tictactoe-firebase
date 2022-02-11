@@ -14,7 +14,7 @@ import {
 function formatPlayer(user){
   return {
     uid: user.uid,
-    email: user.email,
+    name: user.email,
     score: 0
   };
 }
@@ -99,7 +99,7 @@ export default new Vuex.Store({
         return
       }
 
-      commit('SET_USER', auth.currentUser);
+      commit('SET_USER', formatPlayer(auth.currentUser));
 
       router.push('/')
     },
@@ -158,8 +158,22 @@ export default new Vuex.Store({
           'play_board': [...state.DEFAULT_BOARD],
           'started': 0,
           'draw': 0,
-          'creator': formatPlayer(state.user),
+          'creator': state.user,
           'challenger': false
+        };
+        set(newSessionRef, session);
+        resolve(session);
+      })
+    },
+
+    addMessage ({ commit, state}, data) {
+      return new Promise((resolve) => {
+        console.log('addMessage',data);
+        const dbRef = ref(database, 'sessions/'+data.session_id+'/messages');
+        const newSessionRef = push(dbRef);
+        let session = {
+          'name': data.name,
+          'message': data.message,
         };
         set(newSessionRef, session);
         resolve(session);
@@ -168,7 +182,7 @@ export default new Vuex.Store({
 
     joinSession ({ commit, state }, session_id) {
       console.log('JOIN SESSION', session_id);
-      set(ref(database, 'sessions/' +session_id+"/challenger"), formatPlayer(state.user));
+      set(ref(database, 'sessions/' +session_id+"/challenger"), state.user);
       return true;
     },
 
@@ -183,6 +197,7 @@ export default new Vuex.Store({
       console.log('REMOVE CHALLENGER FROM SESSION', session_id);
       const dbRef = ref(database, 'sessions/'+session_id+'/challenger/');
       remove(dbRef);
+      router.push('/');
     },
 
     fetchSessions ({ commit }) {
