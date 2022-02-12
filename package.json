@@ -1,7 +1,7 @@
 {
   "name": "tictactoe-vuejs",
   "version": "0.1.0",
-  "displayName": "Tic Tac Toe - With Firebase",
+  "displayName": "Firebase Test",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

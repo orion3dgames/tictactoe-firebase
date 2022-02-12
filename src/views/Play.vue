@@ -4,10 +4,7 @@
     <div class="bg-light p-3 mb-3">
       <div class="row align-items-center">
         <div class="col-auto">
-          <div class="input-group">
-            <span class="input-group-text">{{share_url}}</span>
-            <button class="btn btn-outline-primary" type="button" @click="copyLink()">Copy</button>
-          </div>
+          <button class="btn btn-outline-primary" type="button" @click="copyLink()">Copy Link</button>
         </div>
         <div class="col-auto" v-if="session.challenger">
           <button @click="leaveGame(session.uid)" class="btn btn-secondary" v-if="session.challenger.uid === user.uid">Leave Game</button>
@@ -23,7 +20,8 @@
 
     <div class="row" >
       <div class="col-sm-8">
-
+        <h5>Game {{hash}}</h5>
+        <hr>
         {{user}}
         <hr>
         {{session}}
