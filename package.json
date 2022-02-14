@@ -6,12 +6,16 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --mode prod",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "vue-cli-service build --mode prod",
+    "start": "node server.js"
   },
   "dependencies": {
     "bootstrap": "^5.1.3",
     "core-js": "^3.6.5",
+    "express": "^4.17.2",
     "firebase": "^9.6.6",
+    "serve-static": "^1.14.2",
     "username-gen": "^1.0.1",
     "vue": "^2.6",
     "vue-cookie": "^1.1.4",
