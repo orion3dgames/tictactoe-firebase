@@ -12,8 +12,8 @@
         <div class="col-auto" v-if="session.creator">
           <button @click="deleteGame(session.uid)" class="btn btn-secondary" v-if="session.creator.uid === user.uid">Delete Game</button>
         </div>
-        <div class="col-auto" v-if="session.challenger && session.creator && session.started === 0">
-          <button @click="startGame()" class="btn btn-primary" >Start Game</button>
+        <div class="col-auto" v-if="(session.challenger && session.creator) && session.started === 0">
+          <button @click="startGame(session.uid)" class="btn btn-primary" >Start Game</button>
         </div>
       </div>
     </div>
@@ -21,14 +21,17 @@
     <div class="row" >
       <div class="col-sm-8">
         <h5>Game {{hash}}</h5>
-        <hr>
-        {{user}}
-        <hr>
-        {{session}}
+
+        <hr />
 
         <div v-if="session.started === 1">
 
-          <div class="alert alert-success">It's {{session.player_turn}} turn.</div>
+          <div v-if="session.player_turn === user.uid">
+            <div class="alert alert-success">It's your turn.</div>
+          </div>
+          <div v-else>
+            <div class="alert alert-danger">Waiting for your opponent to play.</div>
+          </div>
 
           <div class="play-area">
             <div v-for='index in 9' :key='index' @click="squareClick((index-1))" class="block">{{ session.play_board[(index-1)] }}</div>
@@ -38,12 +41,12 @@
         </div>
         <div v-else>
 
-          <div v-if="session.started === 0 && session.playerCount === 2 ">
+          <div v-if="session.started === 0 && ( session.creator && session.challenger )">
             <div class="alert alert-warning">Game is ready to start. Please press the start button to begin the game...</div>
           </div>
 
-          <div v-if="session.started === 0 && session.playerCount < 2 ">
-            <div class="alert alert-warning">Waiting for another player to connect...</div>
+          <div v-if="session.started === 0 && !session.challenger ">
+            <div class="alert alert-warning">Waiting for another player to challenge you...</div>
           </div>
 
         </div>
@@ -51,15 +54,17 @@
       </div>
       <div class="col-sm-4">
 
+        <h5>Scoreboard</h5>
+        <hr>
         <table class="table table-bordered table-sm">
-          <thead class="table-light">
-            <tr>
-              <th v-for="player in session.players" :key="player.socket_id" class="text-center">{{ player.name }}</th>
-            </tr>
-          </thead>
           <tbody>
             <tr>
-              <td v-for="player in session.players" :key="player.socket_id" class="text-center"><span class="display-2">{{ player.score }}</span></td>
+              <th>{{ session.creator.name }}</th>
+              <td class="text-center" width="100">{{ session.creator.score }}</td>
+            </tr>
+            <tr v-if="session.challenger">
+              <th>{{ session.challenger.name }}</th>
+              <td class="text-center">{{ session.challenger.score }}</td>
             </tr>
           </tbody>
         </table>
@@ -110,7 +115,9 @@ export default {
     }
   },
   mounted: function () {
-    console.log('[mounted] Play Page Mounted', this.user);
+
+  },
+  updated: function () {
 
     // IF CREATOR DELETE GAME SESSION, THEN REDIRECT TO HOMEPAGE
     if(!this.session){
@@ -125,8 +132,8 @@ export default {
     deleteGame(uid){
       this.$store.dispatch('deleteSession', uid);
     },
-    startGame(){
-
+    startGame(uid){
+      this.$store.dispatch('startGame', uid);
     },
     sendMessage(){
       this.$store.dispatch('addMessage', {
@@ -142,11 +149,11 @@ export default {
       alert("Link Copied! Please share with a friend to start a game.");
     },
     squareClick(index){
-      if(this.session.player_turn === this.name && !this.session.play_board[index]) {
-        this.$socket.emit('click_square', {
-          'hash': this.hash,
-          'name': this.name,
-          'index': index
+      if(this.session.player_turn === this.user.uid && !this.session.play_board[index]) {
+        this.$store.dispatch('clickSquare', {
+          'session_id': this.session.uid,
+          'uid': this.user.uid,
+          'index': index,
         });
       }
     },

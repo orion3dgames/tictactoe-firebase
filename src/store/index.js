@@ -1,22 +1,63 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex)
+const usernameGen = require("username-gen");
 
 import router from '../router'
 
-import { auth, database, ref, set, push, onValue, remove } from '../firebase'
+import { auth, database} from '../firebase'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  updateProfile
 } from 'firebase/auth'
+import {
+  ref,
+  set,
+  push,
+  onValue,
+  remove,
+  update
+} from 'firebase/database'
 
 function formatPlayer(user){
   return {
     uid: user.uid,
-    name: user.email,
-    score: 0
+    name: user.displayName,
+    email: user.email,
+    score: 0,
+    symbol: '',
   };
+}
+
+const WINNING_CONDITIONS = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
+];
+
+function checkForWinners(gameState) {
+  let roundWon = false;
+  for (let i = 0; i <= 7; i++) {
+    const winCondition = WINNING_CONDITIONS[i];
+    let a = gameState[winCondition[0]];
+    let b = gameState[winCondition[1]];
+    let c = gameState[winCondition[2]];
+    if (a === '' || b === '' || c === '') {
+      continue;
+    }
+    if (a === b && b === c) {
+      roundWon = true;
+      break
+    }
+  }
+  return roundWon;
 }
 
 export default new Vuex.Store({
@@ -130,13 +171,31 @@ export default new Vuex.Store({
         return
       }
 
-      let player = formatPlayer(auth.currentUser);
+      updateProfile(auth.currentUser, {
+        displayName: usernameGen.generateUsername(8),
+      }).then(() => {
 
-      commit('SET_USER', player);
+        let player = formatPlayer(auth.currentUser);
 
-      set(ref(database, 'players/' + player.uid), player);
+        commit('SET_USER', player);
 
-      router.push('/')
+        set(ref(database, 'players/' + player.uid), player);
+
+        router.push('/')
+
+      }).catch((error) => {
+
+      });
+    },
+
+    async updateProfileName({ commit}, newName) {
+      updateProfile(auth.currentUser, {
+        displayName: newName,
+      }).then(() => {
+        alert('Profile updated successfully');
+      }).catch((error) => {
+
+      });
     },
 
     async logout ({ commit }) {
@@ -149,17 +208,18 @@ export default new Vuex.Store({
       return new Promise((resolve) => {
         const dbRef = ref(database, 'sessions');
         const newSessionRef = push(dbRef);
+        state.user.symbol = state.SYMBOL_X;
         let session = {
           'uid': newSessionRef.key,
           'players': [],
           'player_turn': "",
           'messages': "",
-          'current_symbol': state.SYMBOL_O,
           'play_board': [...state.DEFAULT_BOARD],
           'started': 0,
           'draw': 0,
           'creator': state.user,
-          'challenger': false
+          'challenger': false,
+          'latest_winner': 'creator'
         };
         set(newSessionRef, session);
         resolve(session);
@@ -181,7 +241,7 @@ export default new Vuex.Store({
     },
 
     joinSession ({ commit, state }, session_id) {
-      console.log('JOIN SESSION', session_id);
+      state.user.symbol = state.SYMBOL_O;
       set(ref(database, 'sessions/' +session_id+"/challenger"), state.user);
       return true;
     },
@@ -211,6 +271,75 @@ export default new Vuex.Store({
       }, {
         onlyOnce: false
       });
+    },
+
+    startGame ({ commit, state }, session_id) {
+      console.log('START GAME', session_id);
+      let session = state.sessions.find(session => session.uid === session_id);
+      set(ref(database, 'sessions/' +session_id+"/started"), 1);
+      set(ref(database, 'sessions/' +session_id+"/player_turn"), session[session.latest_winner].uid);
+    },
+
+    clickSquare ({ commit, state }, data) {
+
+      let session = state.sessions.find(session => session.uid === data.session_id);
+      let type = session.creator.uid === state.user.uid ? 'creator':'challenger'
+
+      session.play_board[data.index] = session[type].symbol;
+      session.player_turn = session.player_turn === session.creator.uid ? session.challenger.uid : session.creator.uid;
+
+      update(ref(database, 'sessions/' +session.uid+"/"), {
+        'play_board': session.play_board,
+        'player_turn': session.player_turn,
+      });
+
+      // CHECK FOR DRAW
+      let roundDraw = !session.play_board.includes("");
+      if (roundDraw) {
+        update(ref(database, 'sessions/' +session.uid+"/"), {
+          'play_board': [...state.DEFAULT_BOARD],
+          'player_turn': session.creator.uid,
+          'started': 0,
+          'draw': session.draw + 1,
+        });
+      }
+
+      console.log('CLICK SQUARE', session);
+
+      // CHECK FOR WINNER
+      if(checkForWinners(session.play_board)){
+
+          // INCREMENT SCORE
+          let currentScore = session[type].score;
+          update(ref(database, 'sessions/' +session.uid+"/"+type+'/'), {
+            'score': currentScore + 1,
+          });
+
+          // RESTART GAME
+          update(ref(database, 'sessions/' +session.uid+"/"), {
+            'play_board': [...state.DEFAULT_BOARD],
+            'current_symbol': state.SYMBOL_O,
+            'player_turn': session.creator.uid,
+            'started': 0,
+            'latest_winner': type,
+          });
+
+          console.log(type, currentScore, 'sessions/' +session.uid+"/"+type+'/');
+
+          return false;
+      }
+
+        /*
+        // ELSE FIND NEXT PLAYER
+        for (let s in session.players) {
+            if (data.name !== session.players[s].name) {
+                session.player_turn = session.players[s].name;
+            }
+        }
+
+        // give update to room
+        io.to(data.hash).emit('session_update', session);
+        */
     },
 
     fetchUser ({ commit }) {

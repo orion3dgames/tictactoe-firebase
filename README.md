@@ -1,4 +1,4 @@
-# Tic Tac Toe - Fiebase
+# Tic Tac Toe - Firebase
 
 ## Project setup
 ```

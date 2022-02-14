@@ -3,7 +3,31 @@
 
     <button @click="createGame()" class="btn btn-primary">Start New Game</button>
 
-    <hr>
+    <hr />
+
+    <div v-if="sessions.length > 0">
+      <h5>Your Games</h5>
+      <table class="table table-sm table-bordered">
+        <thead>
+        <tr>
+          <th>Game</th>
+          <th>Creator</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody v-for="session in sessions" :key="session.uid">
+        <tr v-if="user.uid === session.creator.uid || user.uid === session.challenger.uid">
+          <td>{{session.uid}}</td>
+          <td>{{session.creator.name}}</td>
+          <td class="text-end">
+            <button @click="reJoinGame(session.uid)" class="btn btn-primary">Rejoin</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr />
 
     <div v-if="sessions.length > 0">
       <h5>Existing Games</h5>
@@ -18,7 +42,7 @@
         <tbody v-for="session in sessions" :key="session.uid">
           <tr v-if="user.uid !== session.creator.uid">
             <td>{{session.uid}}</td>
-            <td>{{session.creator.email}}</td>
+            <td>{{session.creator.name}}</td>
             <td class="text-end">
               <button @click="joinGame(session.uid)" class="btn btn-primary">Challenge</button>
             </td>
@@ -70,6 +94,10 @@ export default {
       this.$store.dispatch('joinSession', hash).then(session => {
         this.$router.push({ path: 'play/#'+hash });
       });
+    },
+
+    reJoinGame(hash){
+      this.$router.push({ path: 'play/#'+hash });
     },
 
   },

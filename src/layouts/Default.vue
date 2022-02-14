@@ -2,10 +2,15 @@
   <div class="container" v-if="user">
 
     <header class="pt-2">
-      <h3 class="m-0">{{ appTitle }} <span class="badge bg-secondary">{{ appVersion }}</span></h3>
-      <div class="">
-        <div class="">Hi <b>{{ user.name}}</b> <button @click="logout()">Logout</button></div>
+      <div class="float-end">
+        Hi <router-link to="/profile"><b>{{ user.name}}</b></router-link>
+        &nbsp;
+        <button @click="logout()" class="btn btn-sm btn-secondary">Logout</button>
       </div>
+      <h3 class="m-0">
+        <router-link to="/">{{ appTitle }}</router-link>
+        <span class="badge bg-secondary">{{ appVersion }}</span>
+      </h3>
     </header>
 
     <hr />

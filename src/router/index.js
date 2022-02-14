@@ -13,6 +13,11 @@ export default new Router({
       component: () => import('../views/Home.vue')
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/Profile.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       meta: { layout: "public" },
