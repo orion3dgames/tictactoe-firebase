@@ -20,7 +20,7 @@
     <footer>
       <hr />
       Code available at:
-      <a class="text-muted" href="https://github.com/oriongunning/tic-tac-toe" target="_blank">https://github.com/oriongunning/tic-tac-toe</a>
+      <a class="text-muted" href="https://github.com/oriongunning/tictactoe-firebase" target="_blank">https://github.com/oriongunning/tictactoe-firebase</a>
     </footer>
   </div>
 </template>

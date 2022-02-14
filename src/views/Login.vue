@@ -42,12 +42,12 @@ export default {
   data() {
     return {
       login_form: {
-        email: "sireoswig@gmail.com",
-        password: "test1235!"
+        email: "",
+        password: ""
       },
       register_form: {
-        email: "sireoswig@gmail.com",
-        password: "test1235!"
+        email: "",
+        password: ""
       },
       error: null
     };
