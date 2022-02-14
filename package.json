@@ -5,9 +5,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --mode prod",
-    "lint": "vue-cli-service lint",
-    "postinstall": "vue-cli-service build --mode prod",
+    "build": "vue-cli-service build",
+    "postinstall": "npm run build",
     "start": "node server.js"
   },
   "dependencies": {
