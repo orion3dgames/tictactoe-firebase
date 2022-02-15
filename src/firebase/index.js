@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
 import { getDatabase } from "firebase/database"
 
-var firebaseConfig = require("../../config/firebase.json");
+var firebaseConfig = require("../../firebase/firebase.json");
 
 const app = initializeApp(firebaseConfig)
 
