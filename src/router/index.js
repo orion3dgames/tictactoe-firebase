@@ -18,6 +18,11 @@ export default new Router({
       component: () => import('../views/Profile.vue')
     },
     {
+      path: '/leaderboard',
+      name: 'leaderboard',
+      component: () => import('../views/Leaderboard.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       meta: { layout: "public" },

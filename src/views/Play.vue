@@ -3,14 +3,11 @@
 
     <div class="bg-light p-3 mb-3">
       <div class="row align-items-center">
-        <div class="col-auto">
-          <button class="btn btn-outline-primary" type="button" @click="copyLink()">Copy Link</button>
-        </div>
         <div class="col-auto" v-if="session.challenger">
           <button @click="leaveGame(session.uid)" class="btn btn-secondary" v-if="session.challenger.uid === user.uid">Leave Game</button>
         </div>
         <div class="col-auto" v-if="session.creator">
-          <button @click="deleteGame(session.uid)" class="btn btn-secondary" v-if="session.creator.uid === user.uid">Delete Game</button>
+          <button @click="deleteGame(session.uid)" class="btn btn-secondary" v-if="session.creator.uid === user.uid">Cancel Game</button>
         </div>
         <div class="col-auto" v-if="(session.challenger && session.creator) && session.started === 0">
           <button @click="startGame(session.uid)" class="btn btn-primary" >Start Game</button>

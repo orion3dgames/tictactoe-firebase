@@ -18,7 +18,11 @@ import {
   push,
   onValue,
   remove,
-  update
+  update,
+  increment,
+    orderByChild,
+    query,
+  limitToLast
 } from 'firebase/database'
 
 function formatPlayer(user){
@@ -68,6 +72,7 @@ export default new Vuex.Store({
     appVersion: process.env.VUE_APP_VERSION || 'NO VERSION FOUND IN MANIFEST.JSON',
     user: false,
     sessions: [],
+    players: [],
     MAX_PLAYERS: 2,
     DEFAULT_BOARD: ["", "", "", "", "", "", "", "", ""],
     WINNING_CONDITIONS: [
@@ -109,12 +114,17 @@ export default new Vuex.Store({
     session: (state) => (id) => {
       return state.sessions.find(session => session.uid == id);
     },
-  }
-  ,
+    players(state) {
+      return state.players;
+    },
+  },
 
   mutations: {
     SET_SESSIONS (state, sessions) {
       state.sessions = sessions
+    },
+    SET_PLAYERS (state, players) {
+      state.players = players
     },
     SET_USER (state, user) {
       state.user = user
@@ -198,6 +208,9 @@ export default new Vuex.Store({
       updateProfile(auth.currentUser, {
         displayName: newName,
       }).then(() => {
+        update(ref(database, 'players/' +auth.currentUser.uid+"/"), {
+          'name': newName,
+        });
         alert('Profile updated successfully');
       }).catch((error) => {
 
@@ -279,6 +292,20 @@ export default new Vuex.Store({
       });
     },
 
+    fetchPlayers({ commit }) {
+      //const dbRef = ref(database, 'players');
+      const dbRef = query(ref(database, 'players'), orderByChild('score'), limitToLast(10));
+      onValue(dbRef, (snapshot) => {
+        let sessions = [];
+        snapshot.forEach((childSnapshot) => {
+          sessions.push(childSnapshot.val());
+        });
+        commit('SET_PLAYERS', sessions)
+      }, {
+        onlyOnce: false
+      });
+    },
+
     startGame ({ commit, state }, session_id) {
       console.log('START GAME', session_id);
       let session = state.sessions.find(session => session.uid === session_id);
@@ -315,45 +342,43 @@ export default new Vuex.Store({
       // CHECK FOR WINNER
       if(checkForWinners(session.play_board)){
 
-          // INCREMENT SCORE
-          let currentScore = session[type].score;
-          update(ref(database, 'sessions/' +session.uid+"/"+type+'/'), {
-            'score': currentScore + 1,
-          });
+        // INCREMENT SCORE
+        update(ref(database, 'sessions/' +session.uid+"/"+type), { 'score': increment(1) });
 
-          // RESTART GAME
-          update(ref(database, 'sessions/' +session.uid+"/"), {
-            'play_board': [...state.DEFAULT_BOARD],
-            'current_symbol': state.SYMBOL_O,
-            'player_turn': session.creator.uid,
-            'started': 0,
-            'latest_winner': type,
-          });
+        // INCREASE LEADERBOARD
+        update(ref(database, 'players/'+state.user.uid), { 'score': increment(1) });
 
-          console.log(type, currentScore, 'sessions/' +session.uid+"/"+type+'/');
+        // RESTART GAME
+        update(ref(database, 'sessions/' +session.uid+"/"), {
+          'play_board': [...state.DEFAULT_BOARD],
+          'current_symbol': state.SYMBOL_O,
+          'player_turn': session.creator.uid,
+          'started': 0,
+          'latest_winner': type,
+        });
 
-          return false;
+        return false;
       }
 
-        /*
-        // ELSE FIND NEXT PLAYER
-        for (let s in session.players) {
-            if (data.name !== session.players[s].name) {
-                session.player_turn = session.players[s].name;
-            }
-        }
-
-        // give update to room
-        io.to(data.hash).emit('session_update', session);
-        */
     },
 
     fetchUser ({ commit }) {
+
       auth.onAuthStateChanged(async user => {
         if (user === null) {
           commit('CLEAR_USER');
-          router.push('/login')
+          console.log('NOT LOGGED IN');
         } else {
+
+          // if display name is empty, then generate a random username
+          if(!auth.currentUser.displayName) {
+            console.log('NO USERNAME, GENERATE');
+            user.displayName = usernameGen.generateUsername(8);
+            updateProfile(auth.currentUser, {
+              displayName: user.displayName,
+            });
+          }
+
           commit('SET_USER', formatPlayer(user))
           if (router && router.currentRoute.name === 'login') {
             // ADD TO DB
