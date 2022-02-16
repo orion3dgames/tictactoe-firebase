@@ -363,11 +363,22 @@ export default new Vuex.Store({
     },
 
     fetchUser ({ commit }) {
+
       auth.onAuthStateChanged(async user => {
         if (user === null) {
           commit('CLEAR_USER');
-          router.push('/login')
+          console.log('NOT LOGGED IN');
         } else {
+
+          // if display name is empty, then generate a random username
+          if(!auth.currentUser.displayName) {
+            console.log('NO USERNAME, GENERATE');
+            user.displayName = usernameGen.generateUsername(8);
+            updateProfile(auth.currentUser, {
+              displayName: user.displayName,
+            });
+          }
+
           commit('SET_USER', formatPlayer(user))
           if (router && router.currentRoute.name === 'login') {
             // ADD TO DB
