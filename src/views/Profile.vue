@@ -39,6 +39,7 @@ export default {
   methods: {
 
     updateProfileName(name){
+      if(this.user.name.length < 1) return false;
       this.$store.dispatch('updateProfileName', this.user.name);
     },
 

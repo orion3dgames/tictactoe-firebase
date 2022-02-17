@@ -1,27 +1,30 @@
 <template>
-  <div class="container" v-if="user">
+  <div class="container" >
+    <div v-if="user">
 
-    <header class="pt-2">
-      <div class="float-end">
-        Hi <router-link to="/profile"><b>{{ user.name}}</b></router-link>
-        &nbsp;
-        <button @click="logout()" class="btn btn-sm btn-secondary">Logout</button>
-      </div>
-      <h3 class="m-0">
-        <router-link to="/">{{ appTitle }}</router-link>
-        <span class="badge bg-secondary">{{ appVersion }}</span>
-      </h3>
-    </header>
+      <header class="pt-2">
+        <div class="float-end">
+          Hi <router-link to="/profile"><b>{{ user.name}}</b></router-link>
+          &nbsp;
+          <button @click="logout()" class="btn btn-sm btn-secondary">Logout</button>
+        </div>
+        <h3 class="m-0">
+          <router-link to="/">{{ appTitle }}</router-link>
+          <span class="badge bg-secondary">{{ appVersion }}</span>
+        </h3>
+      </header>
 
-    <hr />
-
-    <slot />
-
-    <footer>
       <hr />
-      Code available at:
-      <a class="text-muted" href="https://github.com/oriongunning/tictactoe-firebase" target="_blank">https://github.com/oriongunning/tictactoe-firebase</a>
-    </footer>
+
+      <slot />
+
+      <footer>
+        <hr />
+        Code available at:
+        <a class="text-muted" href="https://github.com/oriongunning/tictactoe-firebase" target="_blank">https://github.com/oriongunning/tictactoe-firebase</a>
+      </footer>
+    </div>
+    <div v-else>Loading...</div>
   </div>
 </template>
 

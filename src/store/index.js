@@ -10,7 +10,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  updateProfile
+  updateProfile,
+  UserMetadata,
 } from 'firebase/auth'
 import {
   ref,
@@ -20,8 +21,8 @@ import {
   remove,
   update,
   increment,
-    orderByChild,
-    query,
+  orderByChild,
+  query,
   limitToLast
 } from 'firebase/database'
 
@@ -209,7 +210,7 @@ export default new Vuex.Store({
         displayName: newName,
       }).then(() => {
         update(ref(database, 'players/' +auth.currentUser.uid+"/"), {
-          'name': newName,
+          'name': auth.currentUser.displayName,
         });
         alert('Profile updated successfully');
       }).catch((error) => {
@@ -220,7 +221,7 @@ export default new Vuex.Store({
     async logout ({ commit }) {
       await signOut(auth)
       commit('CLEAR_USER')
-      router.push('/login')
+      //router.push('/')
     },
 
     addSession ({ commit, state}) {
@@ -240,7 +241,9 @@ export default new Vuex.Store({
           'challenger': false,
           'latest_winner': 'creator'
         };
-        set(newSessionRef, session);
+        set(newSessionRef, session).then(() => {
+          set(ref(database, 'players/' +state.user.uid+'/sessions/'+newSessionRef.key+'/'), 'creator');
+        });
         resolve(session);
       })
     },
@@ -267,8 +270,20 @@ export default new Vuex.Store({
 
     deleteSession ({ commit, state }, session_id) {
       console.log('DELETE SESSION', session_id);
+
+      // GET SESSION
+      let session = state.sessions.find(session => session.uid === session_id);
+
+      // REMOVE PLAYERS
+      remove(ref(database, 'players/'+session.creator.uid+'/sessions/'+session_id));
+      if(session.challenger){
+        remove(ref(database, 'players/'+session.challenger.uid+'/sessions/'+session_id));
+      }
+
+      // REMOVE SESSION
       const dbRef = ref(database, 'sessions/'+session_id);
       remove(dbRef);
+
       router.push('/');
     },
 
@@ -370,20 +385,31 @@ export default new Vuex.Store({
           console.log('NOT LOGGED IN');
         } else {
 
-          // if display name is empty, then generate a random username
           if(!auth.currentUser.displayName) {
-            console.log('NO USERNAME, GENERATE');
-            user.displayName = usernameGen.generateUsername(8);
+
+            auth.currentUser.displayName = usernameGen.generateUsername(8);
+
             updateProfile(auth.currentUser, {
-              displayName: user.displayName,
+              displayName: auth.currentUser.displayName,
             });
+
+            set(ref(database, 'players/' + auth.currentUser.uid), {
+              'uid': auth.currentUser.uid,
+              'name': auth.currentUser.displayName,
+              'score': 0,
+              'sessions': false,
+            });
+
           }
 
-          commit('SET_USER', formatPlayer(user))
+          commit('SET_USER', formatPlayer(auth.currentUser))
+
+          /*
           if (router && router.currentRoute.name === 'login') {
             // ADD TO DB
             router.push('/')
           }
+          */
         }
       })
     }

@@ -1,8 +1,9 @@
 import { initializeApp } from "firebase/app"
 import {getAuth, signInAnonymously, updateProfile} from "firebase/auth"
-import { getDatabase } from "firebase/database"
+import {getDatabase, ref, set} from "firebase/database"
+import usernameGen from "username-gen";
 
-var firebaseConfig = require("../../firebase/firebase.json");
+var firebaseConfig = require("../../config/firebase.json");
 
 const app = initializeApp(firebaseConfig)
 

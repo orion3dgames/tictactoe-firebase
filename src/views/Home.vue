@@ -1,57 +1,59 @@
 <template>
-  <div v-if="user">
+  <div >
 
-    <router-link to="/leaderboard" class="btn btn-info float-end">View Leaderboard</router-link>
-    <button @click="createGame()" class="btn btn-primary">Start New Game</button>
+    <div v-if="user">
+      <router-link to="/leaderboard" class="btn btn-info float-end">View Leaderboard</router-link>
+      <button @click="createGame()" class="btn btn-primary">Start New Game</button>
 
-    <div v-if="mysessions.length > 0">
-      <hr />
-      <h5>Your Ongoing Games</h5>
-      <table class="table table-sm table-bordered">
-        <thead>
-          <tr>
-            <th>Game</th>
-            <th>Creator</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody v-for="session in mysessions" :key="session.uid">
-          <tr>
-            <td>{{session.uid}}</td>
-            <td>{{session.creator.name}}</td>
-            <td class="text-end">
-              <button @click="reJoinGame(session.uid)" class="btn btn-primary">Rejoin</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div>
-      <hr />
-      <h5>All Games</h5>
-      <table class="table table-sm table-bordered" v-if="allsessions.length > 0">
-        <thead>
-          <tr>
-            <th>Game</th>
-            <th>Creator</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody v-for="session in allsessions" :key="session.uid">
-          <tr>
-            <td>{{session.uid}}</td>
-            <td>{{session.creator.name}}</td>
-            <td class="text-end">
-              <button @click="joinGame(session.uid)" class="btn btn-primary">Challenge</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div v-else>
-        <div class="alert bg-light">No games available...</div>
+      <div v-if="mysessions.length > 0">
+        <hr />
+        <h5>Your Ongoing Games</h5>
+        <table class="table table-sm table-bordered">
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Creator</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody v-for="session in mysessions" :key="session.uid">
+            <tr>
+              <td>{{session.uid}}</td>
+              <td>{{session.creator.name}}</td>
+              <td class="text-end">
+                <button @click="reJoinGame(session.uid)" class="btn btn-primary">Rejoin</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
+      <div>
+        <hr />
+        <h5>All Games</h5>
+        <table class="table table-sm table-bordered" v-if="allsessions.length > 0">
+          <thead>
+            <tr>
+              <th>Game</th>
+              <th>Creator</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody v-for="session in allsessions" :key="session.uid">
+            <tr>
+              <td>{{session.uid}}</td>
+              <td>{{session.creator.name}}</td>
+              <td class="text-end">
+                <button @click="joinGame(session.uid)" class="btn btn-primary">Challenge</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div v-else>
+          <div class="alert bg-light">No games available...</div>
+        </div>
+
+      </div>
     </div>
 
 
