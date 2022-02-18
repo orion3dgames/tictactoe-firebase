@@ -12,23 +12,33 @@ I will be using Firebase Realtime Database, with anonymous authetification.
     "players" : {
         "RLE6jSaKCSM85mE6RPQ1nnqN8zA3" : {
             "displayName" : "plug25",
-            "score" : 0,
-            "sessions" : false,
+            "score" : 30,
+            "sessions" : {
+                "-Mw9C4TSKto437hNOkyC": 'challenger',
+            },
             "uid" : "RLE6jSaKCSM85mE6RPQ1nnqN8zA3"
+        },
+        "xzZ23VqDmAbOBScFK9d746pN0Wo1" : {
+            "displayName" : "Gull45",
+            "score" : 25,
+            "sessions" : {
+                "-Mw9C4TSKto437hNOkyC": 'challenger',
+            },
+            "uid" : "xzZ23VqDmAbOBScFK9d746pN0Wo1"
         },
     },
     "sessions" : {
         "-Mw9C4TSKto437hNOkyC" : {
             "challenger" : {
-                "displayName" : "plug25",
-                "score" : 0,
-                "symbol" : "",
+                "displayName" : "plug25", // ?? Not sure if this should be here
+                "score" : 10,
+                "symbol" : "O",
                 "uid" : "RLE6jSaKCSM85mE6RPQ1nnqN8zA3"
             },
             "creator" : {
-                "displayName" : "Gull45",
-                "score" : 0,
-                "symbol" : "",
+                "displayName" : "Gull45", // ?? Not sure if this should be here
+                "score" : 20,
+                "symbol" : "X",
                 "uid" : "xzZ23VqDmAbOBScFK9d746pN0Wo1"
             },
             "draw" : 0,
@@ -36,8 +46,13 @@ I will be using Firebase Realtime Database, with anonymous authetification.
             "messages" : "",
             "play_board" : [ "", "", "", "", "", "", "", "", "" ],
             "player_turn" : "xzZ23VqDmAbOBScFK9d746pN0Wo1",
-            "started" : 1,
-            "uid" : "-Mw9C4TSKto437hNOkyC"
+            "started": 0,
+            "deleted": 0,
+            "uid" : "-Mw9C4TSKto437hNOkyC",
+            "history" : {
+                "uid": [ "X", "X", "O", "X", "O", "O", "X", "O", "X" ],
+                "uid": [ "X", "X", "O", "X", "O", "O", "X", "O", "X" ],
+            }
         }
     }
 }
