@@ -19,7 +19,7 @@
           <tbody v-for="session in mysessions" :key="session.uid">
             <tr>
               <td>{{session.uid}}</td>
-              <td>{{session.creator.name}}</td>
+              <td>{{session.creator.displayName}}</td>
               <td class="text-end">
                 <button @click="reJoinGame(session.uid)" class="btn btn-primary">Rejoin</button>
               </td>
@@ -42,7 +42,7 @@
           <tbody v-for="session in allsessions" :key="session.uid">
             <tr>
               <td>{{session.uid}}</td>
-              <td>{{session.creator.name}}</td>
+              <td>{{session.creator.displayName}}</td>
               <td class="text-end">
                 <button @click="joinGame(session.uid)" class="btn btn-primary">Challenge</button>
               </td>

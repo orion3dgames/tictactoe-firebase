@@ -4,7 +4,7 @@
     <h5>Profile</h5>
 
     <div class="form-floating mb-3">
-      <input type="email" class="form-control" id="floatingInput" placeholder="username" v-model="user.name">
+      <input type="email" class="form-control" id="floatingInput" placeholder="username" v-model="user.displayName">
       <label for="floatingInput">Profile Name</label>
     </div>
 
@@ -39,8 +39,8 @@ export default {
   methods: {
 
     updateProfileName(name){
-      if(this.user.name.length < 1) return false;
-      this.$store.dispatch('updateProfileName', this.user.name);
+      if(this.user.displayName.length < 1) return false;
+      this.$store.dispatch('updateProfileName', this.user.displayName);
     },
 
   },

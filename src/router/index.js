@@ -23,12 +23,6 @@ export default new Router({
       component: () => import('../views/Leaderboard.vue')
     },
     {
-      path: '/login',
-      name: 'login',
-      meta: { layout: "public" },
-      component: () => import('../views/Login.vue')
-    },
-    {
       path: '/play',
       name: 'play',
       component: () => import('../views/Play.vue'),

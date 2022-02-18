@@ -56,11 +56,11 @@
         <table class="table table-bordered table-sm">
           <tbody>
             <tr>
-              <th>{{ session.creator.name }}</th>
+              <th>{{ session.creator.displayName }}</th>
               <td class="text-center" width="100">{{ session.creator.score }}</td>
             </tr>
             <tr v-if="session.challenger">
-              <th>{{ session.challenger.name }}</th>
+              <th>{{ session.challenger.displayName }}</th>
               <td class="text-center">{{ session.challenger.score }}</td>
             </tr>
           </tbody>

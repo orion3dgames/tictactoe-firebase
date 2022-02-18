@@ -1,5 +1,5 @@
 <template>
-  <div v-if="user">
+  <div>
 
     <h5>Leaderboard (TOP 10 Players)</h5>
 
@@ -7,21 +7,20 @@
 
     <table class="table table-sm table-bordered">
       <thead>
-      <tr>
-        <th>#</th>
-        <th>Player Name</th>
-        <th>Score</th>
-      </tr>
+        <tr>
+          <th>#</th>
+          <th>Player Name</th>
+          <th>Score</th>
+        </tr>
       </thead>
       <tbody v-for="(player, index) in players.slice().reverse()" :key="player.uid">
-      <tr>
-        <td>{{ (index + 1)}}</td>
-        <td>{{player.name}}</td>
-        <td class="text-end">{{player.score}}</td>
-      </tr>
+        <tr>
+          <td>{{ (index + 1)}}</td>
+          <td>{{player.displayName}}</td>
+          <td class="text-end">{{player.score}}</td>
+        </tr>
       </tbody>
     </table>
-
 
   </div>
 </template>

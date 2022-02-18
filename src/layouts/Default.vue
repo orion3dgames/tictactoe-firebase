@@ -4,7 +4,7 @@
 
       <header class="pt-2">
         <div class="float-end">
-          Hi <router-link to="/profile"><b>{{ user.name}}</b></router-link>
+          Hi <router-link to="/profile"><b>{{ user.displayName}}</b></router-link>
           &nbsp;
           <button @click="logout()" class="btn btn-sm btn-secondary">Logout</button>
         </div>

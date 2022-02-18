@@ -26,10 +26,10 @@ import {
   limitToLast
 } from 'firebase/database'
 
-function formatPlayer(user){
+function formatSessionPlayer(user){
   return {
     uid: user.uid,
-    name: user.displayName,
+    displayName: user.displayName,
     email: user.email,
     score: 0,
     symbol: '',
@@ -137,6 +137,7 @@ export default new Vuex.Store({
 
   actions: {
 
+    /*
     async login ({ commit }, details) {
       const { email, password } = details
 
@@ -204,6 +205,7 @@ export default new Vuex.Store({
 
       });
     },
+    */
 
     async updateProfileName({ commit}, newName) {
       updateProfile(auth.currentUser, {
@@ -237,7 +239,7 @@ export default new Vuex.Store({
           'play_board': [...state.DEFAULT_BOARD],
           'started': 0,
           'draw': 0,
-          'creator': state.user,
+          'creator': formatSessionPlayer(state.user),
           'challenger': false,
           'latest_winner': 'creator'
         };
@@ -248,23 +250,9 @@ export default new Vuex.Store({
       })
     },
 
-    addMessage ({ commit, state}, data) {
-      return new Promise((resolve) => {
-        console.log('addMessage',data);
-        const dbRef = ref(database, 'sessions/'+data.session_id+'/messages');
-        const newSessionRef = push(dbRef);
-        let session = {
-          'name': data.name,
-          'message': data.message,
-        };
-        set(newSessionRef, session);
-        resolve(session);
-      })
-    },
-
     joinSession ({ commit, state }, session_id) {
       state.user.symbol = state.SYMBOL_O;
-      set(ref(database, 'sessions/' +session_id+"/challenger"), state.user);
+      set(ref(database, 'sessions/' +session_id+"/challenger"), formatSessionPlayer(state.user));
       return true;
     },
 
@@ -292,6 +280,20 @@ export default new Vuex.Store({
       const dbRef = ref(database, 'sessions/'+session_id+'/challenger/');
       remove(dbRef);
       router.push('/');
+    },
+
+    addMessage ({ commit, state}, data) {
+      return new Promise((resolve) => {
+        console.log('addMessage',data);
+        const dbRef = ref(database, 'sessions/'+data.session_id+'/messages');
+        const newSessionRef = push(dbRef);
+        let session = {
+          'name': data.name,
+          'message': data.message,
+        };
+        set(newSessionRef, session);
+        resolve(session);
+      })
     },
 
     fetchSessions ({ commit }) {
@@ -380,9 +382,11 @@ export default new Vuex.Store({
     fetchUser ({ commit }) {
 
       auth.onAuthStateChanged(async user => {
+
         if (user === null) {
+
           commit('CLEAR_USER');
-          console.log('NOT LOGGED IN');
+
         } else {
 
           if(!auth.currentUser.displayName) {
@@ -395,21 +399,15 @@ export default new Vuex.Store({
 
             set(ref(database, 'players/' + auth.currentUser.uid), {
               'uid': auth.currentUser.uid,
-              'name': auth.currentUser.displayName,
+              'displayName': auth.currentUser.displayName,
               'score': 0,
               'sessions': false,
             });
 
           }
 
-          commit('SET_USER', formatPlayer(auth.currentUser))
+          commit('SET_USER', auth.currentUser)
 
-          /*
-          if (router && router.currentRoute.name === 'login') {
-            // ADD TO DB
-            router.push('/')
-          }
-          */
         }
       })
     }
