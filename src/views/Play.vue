@@ -136,7 +136,7 @@ export default {
       this.$store.dispatch('addMessage', {
         'session_id': this.session.uid,
         'message': this.chat_message,
-        'name': this.user.name,
+        'name': this.user.displayName,
       });
       this.chat_message = '';
     },
