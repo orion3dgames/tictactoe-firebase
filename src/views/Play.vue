@@ -1,22 +1,8 @@
 <template>
   <div v-if="session">
 
-    <div class="bg-light p-3 mb-3">
-      <div class="row align-items-center">
-        <div class="col-auto" v-if="session.challenger">
-          <button @click="leaveGame(session.uid)" class="btn btn-secondary" v-if="session.challenger.uid === user.uid">Leave Game</button>
-        </div>
-        <div class="col-auto" v-if="session.creator">
-          <button @click="deleteGame(session.uid)" class="btn btn-secondary" v-if="session.creator.uid === user.uid">Cancel Game</button>
-        </div>
-        <div class="col-auto" v-if="(session.challenger && session.creator) && session.started === 0">
-          <button @click="startGame(session.uid)" class="btn btn-primary" >Start Game</button>
-        </div>
-      </div>
-    </div>
-
     <div class="row" >
-      <div class="col-sm-8">
+      <div class="col-sm-7">
         <h5>Game {{hash}}</h5>
 
         <hr />
@@ -49,7 +35,15 @@
         </div>
 
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-5">
+
+        <button @click="leaveGame(session.uid)" class="btn btn-sm btn-secondary" v-if="session.challenger && session.challenger.uid === user.uid">Leave</button>
+        <button @click="deleteGame(session.uid)" class="btn btn-sm btn-secondary" v-if="session.creator.uid === user.uid">Cancel</button>
+        <span v-if="(session.challenger && session.creator) && session.started === 0">
+          <button @click="startGame(session.uid)" class="btn btn-sm btn-primary" >Start</button>
+        </span>
+
+        <hr>
 
         <h5>Scoreboard</h5>
         <hr>
@@ -120,6 +114,12 @@ export default {
     if(!this.session){
       this.$router.push('/');
     }
+
+    // IF CREATOR DELETE GAME SESSION, THEN REDIRECT TO HOMEPAGE
+    /*
+    if(!this.session.challenger && this.session.creator.uid !== this.user.uid){
+      this.$store.dispatch('joinSession', this.session.uid);
+    }*/
 
   },
   methods: {

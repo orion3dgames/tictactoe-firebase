@@ -12,6 +12,17 @@ and open the template in the editor.
 
 @import "bootstrap-custom";
 
+body{
+  background: #F7F7F7;
+  padding: 0px;
+}
+
+.game-container{
+  background: #FFF;
+  border: 1px solid #EEE;
+  padding: 15px;
+}
+
 .play-area {
   margin: 0 auto;
   width: 300px;

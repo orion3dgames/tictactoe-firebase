@@ -14,9 +14,6 @@ import PublicLayout from "./layouts/Public";
 Vue.component('default_layout', DefaultLayout);
 Vue.component('public_layout', PublicLayout);
 
-var VueCookie = require('vue-cookie');
-Vue.use(VueCookie);
-
 // VUEX
 Vue.use(Vuex);
 import store from './store'

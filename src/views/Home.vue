@@ -2,8 +2,8 @@
   <div >
 
     <div v-if="user">
-      <router-link to="/leaderboard" class="btn btn-info float-end">View Leaderboard</router-link>
-      <button @click="createGame()" class="btn btn-primary">Start New Game</button>
+      <button @click="createGame()" class="btn btn-primary float-end">Start New Game</button>
+      <router-link to="/leaderboard" class="btn btn-secondary">View Leaderboard</router-link>
 
       <div v-if="mysessions.length > 0">
         <hr />

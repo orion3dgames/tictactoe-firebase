@@ -1,30 +1,41 @@
 <template>
-  <div class="container" >
-    <div v-if="user">
+    <div class="container">
+      <div class="game-container m-sm-3">
+        <div v-if="user">
 
-      <header class="pt-2">
-        <div class="float-end">
-          Hi <router-link to="/profile"><b>{{ user.displayName}}</b></router-link>
-          &nbsp;
-          <button @click="logout()" class="btn btn-sm btn-secondary">Logout</button>
+          <header class="pt-2">
+            <div class="row">
+              <div class="col-sm-6">
+                <h3 class="m-0 d-inline-block me-2">
+                  <router-link to="/" class="">{{ appTitle }}</router-link>
+                </h3>
+                <span class="badge bg-secondary">{{ appVersion }}</span>
+              </div>
+              <div class="col-sm-6 text-end">
+                <div class="p-2">
+                  Hi <router-link to="/profile"><b>{{ user.displayName}}</b></router-link>
+                  <!--<button @click="logout()" class="btn btn-sm btn-secondary">Logout</button>-->
+                </div>
+              </div>
+            </div>
+          </header>
+
+          <hr />
+
+          <slot />
+
+          <footer>
+            <hr />
+            GITHUB:
+            <a class="text-muted" href="https://github.com/oriongunning/tictactoe-firebase" target="_blank">https://github.com/oriongunning/tictactoe-firebase</a>
+          </footer>
         </div>
-        <h3 class="m-0">
-          <router-link to="/">{{ appTitle }}</router-link>
-          <span class="badge bg-secondary">{{ appVersion }}</span>
-        </h3>
-      </header>
-
-      <hr />
-
-      <slot />
-
-      <footer>
-        <hr />
-        Code available at:
-        <a class="text-muted" href="https://github.com/oriongunning/tictactoe-firebase" target="_blank">https://github.com/oriongunning/tictactoe-firebase</a>
-      </footer>
+        <div v-else>
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
     </div>
-    <div v-else>Loading...</div>
   </div>
 </template>
 

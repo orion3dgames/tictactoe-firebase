@@ -107,7 +107,7 @@ export default new Vuex.Store({
       return state.sessions;
     },
     mysessions(state) {
-      return state.sessions.filter(session => (session.creator.uid === state.user.uid || session.challenger.uid === state.user.uid));
+      return state.sessions.filter(session => (session.creator.uid === state.user.uid || (session.challenger && session.challenger.uid === state.user.uid) ));
     },
     allsessions(state) {
       return state.sessions.filter(session => (session.creator.uid !== state.user.uid));
