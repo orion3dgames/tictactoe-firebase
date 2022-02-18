@@ -32,7 +32,7 @@ function formatSessionPlayer(user){
     displayName: user.displayName,
     email: user.email,
     score: 0,
-    symbol: '',
+    symbol: user.symbol,
   };
 }
 
