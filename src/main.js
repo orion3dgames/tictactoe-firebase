@@ -10,9 +10,9 @@ import "@/scss/site.scss";
 
 // IMPORT LAYOUTS
 import DefaultLayout from "./layouts/Default";
-import PublicLayout from "./layouts/Public";
+//import PublicLayout from "./layouts/Public";
 Vue.component('default_layout', DefaultLayout);
-Vue.component('public_layout', PublicLayout);
+//Vue.component('public_layout', PublicLayout);
 
 // VUEX
 Vue.use(Vuex);

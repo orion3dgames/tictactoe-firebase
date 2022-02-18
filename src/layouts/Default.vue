@@ -5,13 +5,13 @@
 
           <header class="pt-2">
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col">
                 <h3 class="m-0 d-inline-block me-2">
                   <router-link to="/" class="">{{ appTitle }}</router-link>
                 </h3>
                 <span class="badge bg-secondary">{{ appVersion }}</span>
               </div>
-              <div class="col-sm-6 text-end">
+              <div class="col text-end">
                 <div class="p-2">
                   Hi <router-link to="/profile"><b>{{ user.displayName}}</b></router-link>
                   <!--<button @click="logout()" class="btn btn-sm btn-secondary">Logout</button>-->

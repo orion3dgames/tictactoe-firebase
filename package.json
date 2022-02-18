@@ -1,7 +1,7 @@
 {
   "name": "tictactoe-vuejs",
   "version": "0.5.1",
-  "displayName": "Play Tic Tac Toe",
+  "displayName": "Play TicTacToe",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,9 +10,9 @@
   "dependencies": {
     "bootstrap": "^5.1.3",
     "core-js": "^3.6.5",
-    "firebase": "^9.6.6",
+    "firebase": "^9.6.7",
     "username-gen": "^1.0.1",
-    "vue": "^2.6",
+    "vue": "^2.6.14",
     "vue-router": "^3.5.3",
     "vuex": "^3.6.2"
   },

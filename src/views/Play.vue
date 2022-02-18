@@ -37,43 +37,46 @@
       </div>
       <div class="col-sm-5">
 
-        <button @click="leaveGame(session.uid)" class="btn btn-sm btn-secondary" v-if="session.challenger && session.challenger.uid === user.uid">Leave</button>
-        <button @click="deleteGame(session.uid)" class="btn btn-sm btn-secondary" v-if="session.creator.uid === user.uid">Cancel</button>
-        <span v-if="(session.challenger && session.creator) && session.started === 0">
-          <button @click="startGame(session.uid)" class="btn btn-sm btn-primary" >Start</button>
-        </span>
+        <div class="bg-light p-3">
 
-        <hr>
-
-        <h5>Scoreboard</h5>
-        <hr>
-        <table class="table table-bordered table-sm">
-          <tbody>
-            <tr>
-              <th>{{ session.creator.displayName }}</th>
-              <td class="text-center" width="100">{{ session.creator.score }}</td>
-            </tr>
-            <tr v-if="session.challenger">
-              <th>{{ session.challenger.displayName }}</th>
-              <td class="text-center">{{ session.challenger.score }}</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h5>Chat</h5>
-        <hr>
-        <ul class="list-unstyled">
-          <li v-for="(msg, index) in session.messages" :key="index">
-            <b><small class="text-muted">{{ msg.name }}</small></b>: {{ msg.message }}
-          </li>
-        </ul>
-
-        <form class="row row-cols-lg-auto g-3 align-items-center" @submit.prevent="sendMessage">
-          <div class="input-group mb-3">
-            <input type="text" class="form-control" v-model="chat_message" placeholder="Message">
-            <button type="submit" class="btn btn-primary">Send</button>
+          <div class="btn-group w-100" role="group" aria-label="Game Options Buttons">
+            <button @click="leaveGame(session.uid)" class="btn btn-outline-danger" v-if="session.challenger && session.challenger.uid === user.uid">Leave</button>
+            <button @click="deleteGame(session.uid)" class="btn btn-outline-secondary" v-if="session.creator.uid === user.uid">Cancel</button>
+            <button @click="startGame(session.uid)" class="btn btn-primary" v-if="(session.challenger && session.creator) && session.started === 0">Start</button>
           </div>
-        </form>
+
+          <hr>
+
+          <h5>Scoreboard</h5>
+          <hr>
+          <table class="table table-bordered table-sm">
+            <tbody>
+              <tr>
+                <th>{{ session.creator.displayName }}</th>
+                <td class="text-center" width="100">{{ session.creator.score }}</td>
+              </tr>
+              <tr v-if="session.challenger">
+                <th>{{ session.challenger.displayName }}</th>
+                <td class="text-center">{{ session.challenger.score }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h5>Chat</h5>
+          <hr>
+          <ul class="list-unstyled">
+            <li v-for="(msg, index) in session.messages" :key="index">
+              <b><small class="text-muted">{{ msg.name }}</small></b>: {{ msg.message }}
+            </li>
+          </ul>
+
+          <form class="row row-cols-lg-auto g-3 align-items-center" @submit.prevent="sendMessage">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" v-model="chat_message" placeholder="Message">
+              <button type="submit" class="btn btn-primary">Send</button>
+            </div>
+          </form>
+        </div>
 
       </div>
     </div>
@@ -117,7 +120,7 @@ export default {
 
     // IF CREATOR DELETE GAME SESSION, THEN REDIRECT TO HOMEPAGE
     /*
-    if(!this.session.challenger && this.session.creator.uid !== this.user.uid){
+    if(this.session && !this.session.challenger && this.session.creator.uid !== this.user.uid){
       this.$store.dispatch('joinSession', this.session.uid);
     }*/
 
@@ -139,11 +142,6 @@ export default {
         'name': this.user.displayName,
       });
       this.chat_message = '';
-    },
-    copyLink(){
-      var copyText = this.share_url;
-      navigator.clipboard.writeText(copyText);
-      alert("Link Copied! Please share with a friend to start a game.");
     },
     squareClick(index){
       if(this.session.player_turn === this.user.uid && !this.session.play_board[index]) {

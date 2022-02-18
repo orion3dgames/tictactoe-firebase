@@ -5,13 +5,10 @@ const usernameGen = require("username-gen");
 
 import router from '../router'
 
-import { auth, database} from '../firebase'
+import { auth, database } from '../firebase'
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   signOut,
   updateProfile,
-  UserMetadata,
 } from 'firebase/auth'
 import {
   ref,
