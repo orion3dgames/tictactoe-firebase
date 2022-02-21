@@ -37,7 +37,7 @@
       </div>
       <div class="col-sm-5">
 
-        <div class="bg-light p-3">
+        <div class="bg-light p-3 mb-3">
 
           <div class="btn-group w-100" role="group" aria-label="Game Options Buttons">
             <button @click="leaveGame(session.uid)" class="btn btn-outline-danger" v-if="session.challenger && session.challenger.uid === user.uid">Leave</button>
@@ -61,7 +61,9 @@
               </tr>
             </tbody>
           </table>
+        </div>
 
+        <div class="bg-light p-3 mb-3">
           <h5>Chat</h5>
           <hr>
           <ul class="list-unstyled">
@@ -69,7 +71,6 @@
               <b><small class="text-muted">{{ msg.name }}</small></b>: {{ msg.message }}
             </li>
           </ul>
-
           <form class="row row-cols-lg-auto g-3 align-items-center" @submit.prevent="sendMessage">
             <div class="input-group mb-3">
               <input type="text" class="form-control" v-model="chat_message" placeholder="Message">
